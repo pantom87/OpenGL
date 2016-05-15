@@ -1,0 +1,13 @@
+C:\Users\Frank\Desktop\repository\OpenGL\OpenGL\OpenGLSample\OpenGLSample\bin\Debug\OpenGLSample.exe.config
+C:\Users\Frank\Desktop\repository\OpenGL\OpenGL\OpenGLSample\OpenGLSample\bin\Debug\OpenGLSample.exe
+C:\Users\Frank\Desktop\repository\OpenGL\OpenGL\OpenGLSample\OpenGLSample\bin\Debug\OpenGLSample.pdb
+C:\Users\Frank\Desktop\repository\OpenGL\OpenGL\OpenGLSample\OpenGLSample\bin\Debug\OpenTK.dll
+C:\Users\Frank\Desktop\repository\OpenGL\OpenGL\OpenGLSample\OpenGLSample\bin\Debug\OpenTK.GLControl.dll
+C:\Users\Frank\Desktop\repository\OpenGL\OpenGL\OpenGLSample\OpenGLSample\bin\Debug\OpenTK.pdb
+C:\Users\Frank\Desktop\repository\OpenGL\OpenGL\OpenGLSample\OpenGLSample\bin\Debug\OpenTK.xml
+C:\Users\Frank\Desktop\repository\OpenGL\OpenGL\OpenGLSample\OpenGLSample\bin\Debug\OpenTK.GLControl.xml
+C:\Users\Frank\Desktop\repository\OpenGL\OpenGL\OpenGLSample\OpenGLSample\obj\Debug\OpenGLSample.Form1.resources
+C:\Users\Frank\Desktop\repository\OpenGL\OpenGL\OpenGLSample\OpenGLSample\obj\Debug\OpenGLSample.Properties.Resources.resources
+C:\Users\Frank\Desktop\repository\OpenGL\OpenGL\OpenGLSample\OpenGLSample\obj\Debug\OpenGLSample.csproj.GenerateResource.Cache
+C:\Users\Frank\Desktop\repository\OpenGL\OpenGL\OpenGLSample\OpenGLSample\obj\Debug\OpenGLSample.exe
+C:\Users\Frank\Desktop\repository\OpenGL\OpenGL\OpenGLSample\OpenGLSample\obj\Debug\OpenGLSample.pdb
