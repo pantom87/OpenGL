@@ -19,14 +19,12 @@ namespace OpenGLSample
             InitializeComponent();
         }
 
-        Vector2 StartV2;
-        Vector2 DefaultV2 = new Vector2(0, 0);
-        Vector2 CurMousePositionV2;
+        Vector2 FS;
+        Vector2 W_C = new Vector2(0, 0);
+        private float ScaleVelue_FtoW = 1;
 
-        private float ScrollValue = 1;
-
-        Point Line1Point = new Point(10, 20);
-        Point Line2Point = new Point(100, 20);
+        Point Line1Point = new Point(0, 0);
+        Point Line2Point = new Point(100, 0);
         Point Line3Point = new Point(100, 50);
 
 
@@ -49,66 +47,38 @@ namespace OpenGLSample
         private void glControl1_Load(object sender, EventArgs e)
         {
             GL.ClearColor(Color.SkyBlue);
-            SetupViewport();
+            UpdateProjection();
         }
 
-        private void SetupViewport()
+        private Vector2 TransForm_FtoW( Vector2 F )
         {
-            int w = glControl1.Width;
-            int h = glControl1.Height;
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.Ortho(0, w, 0, h, -1, 1); // Bottom-left corner pixel has coordinate (0, 0)
-            GL.Viewport(0, 0, w, h); // Use all of the glControl painting area
+            return F / ScaleVelue_FtoW;
         }
 
-        private void ZoomMode()
+        private Vector2 TransForm_WtoF(Vector2 W)
         {
-            Oper_Zoom();
-            Move_Origin();
+            return W * ScaleVelue_FtoW;
         }
 
-        private void glControl1_MouseWheel(object sender, MouseEventArgs e)
+        private void Pan_Move(Vector2 VS ,Vector2 VE)
         {
-            CurMousePositionV2.X = e.X;
-            CurMousePositionV2.Y = glControl1.Height - e.Y;
-            Move_Center();
-            if(e.Delta > 0)
-            {
-                ScrollValue += 0.1f;
-            }
-            else
-            {
-                ScrollValue -= 0.1f;
-            }
-            ZoomMode();
+            Vector2 T_FES = VE - VS;
+            Vector2 w = TransForm_FtoW(T_FES);
+            W_C -= w;
+            UpdateProjection();
         }
-
-        private void glControl1_MouseDown(object sender, MouseEventArgs e)
+        private void UpdateProjection()
         {
-            StartV2 = new Vector2(e.X, -e.Y);
-        }
-
-        private void glControl1_MouseUp(object sender, MouseEventArgs e)
-        {
-            CurMousePositionV2 = new Vector2(e.X - StartV2.X, -e.Y - StartV2.Y);
-            DefaultV2 -= CurMousePositionV2;
-            Move_Origin();
-        }
-
-        private void Oper_Zoom()
-        {
-            Vector2 v2 = new Vector2(0, 0);
             GL.ClearColor(Color.SkyBlue);
 
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
-
-            GL.Ortho(0, 500 / ScrollValue, 0, 500 / ScrollValue, -100, 100); // Bottom-left corner pixel has coordinate (0, 0)      안원근법
+            
+            GL.Ortho(0, glControl1.Width / ScaleVelue_FtoW, 0, glControl1.Height / ScaleVelue_FtoW, -100, 100); // Bottom-left corner pixel has coordinate (0, 0)      안원근법
             {
-                Vector3 V3Eye = new Vector3(v2);
+                Vector3 V3Eye = new Vector3(W_C);
                 V3Eye.Z = 100;
-                Vector3 V3Target = new Vector3(v2);
+                Vector3 V3Target = new Vector3(W_C);
                 V3Target.Z = -1;
                 Vector3 V3Up = Vector3.UnitY;
 
@@ -116,31 +86,40 @@ namespace OpenGLSample
 
                 GL.MultMatrix(ref m4);
             }
-
-            GL.Viewport(0, 0, glControl1.Width, glControl1.Height); // Use all of the glControl painting area
-        }
-
-        private void Move_Origin()
-        {
-            Line1Point.X += Convert.ToInt32(CurMousePositionV2.X / ScrollValue);
-            Line1Point.Y += Convert.ToInt32(CurMousePositionV2.Y / ScrollValue);
-            Line2Point.X += Convert.ToInt32(CurMousePositionV2.X / ScrollValue);
-            Line2Point.Y += Convert.ToInt32(CurMousePositionV2.Y / ScrollValue);
-            Line3Point.X += Convert.ToInt32(CurMousePositionV2.X / ScrollValue);
-            Line3Point.Y += Convert.ToInt32(CurMousePositionV2.Y / ScrollValue);
-
+            GL.Viewport(0, 0, glControl1.Width, glControl1.Height);
             glControl1.Invalidate();
         }
 
-        private void Move_Center()
+
+        private void glControl1_MouseDown(object sender, MouseEventArgs e)
         {
-            Line1Point.X -= Convert.ToInt32(CurMousePositionV2.X / ScrollValue);
-            Line1Point.Y -= Convert.ToInt32(CurMousePositionV2.Y / ScrollValue);
-            Line2Point.X -= Convert.ToInt32(CurMousePositionV2.X / ScrollValue);
-            Line2Point.Y -= Convert.ToInt32(CurMousePositionV2.Y / ScrollValue);
-            Line3Point.X -= Convert.ToInt32(CurMousePositionV2.X / ScrollValue);
-            Line3Point.Y -= Convert.ToInt32(CurMousePositionV2.Y / ScrollValue);
+            FS = new Vector2(e.X , -e.Y);
         }
 
+        private void glControl1_MouseUp(object sender, MouseEventArgs e)
+        {
+            Vector2 FE = new Vector2(e.X,-e.Y);
+            Pan_Move(FS,FE);
+        }
+  
+
+        private void glControl1_MousWheel(object sender, MouseEventArgs e)
+        {
+            Vector2 FE = new Vector2(0,-glControl1.Height);
+            FS = new Vector2(e.X, -e.Y);
+
+            Pan_Move(FS, FE);
+            if (e.Delta > 0)
+            {
+                if (ScaleVelue_FtoW > 5) ScaleVelue_FtoW = 5;
+                ScaleVelue_FtoW +=0.1f;
+            }
+            else
+            {
+                ScaleVelue_FtoW -=0.1f;
+                if (ScaleVelue_FtoW < 0.1) ScaleVelue_FtoW = 0.1f;
+            }
+            Pan_Move(FE, FS);
+        }
     }
 }
