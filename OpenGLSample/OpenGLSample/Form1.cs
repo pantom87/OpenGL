@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
+using System.Threading;
 
 namespace OpenGLSample
 {
@@ -90,14 +91,16 @@ namespace OpenGLSample
             glControl1.Invalidate();
         }
 
-
+        private bool isMouseDown = false;
         private void glControl1_MouseDown(object sender, MouseEventArgs e)
         {
+            isMouseDown = true;
             FS = new Vector2(e.X , -e.Y);
         }
 
         private void glControl1_MouseUp(object sender, MouseEventArgs e)
         {
+            isMouseDown = false;
             Vector2 FE = new Vector2(e.X,-e.Y);
             Pan_Move(FS,FE);
         }
@@ -120,6 +123,16 @@ namespace OpenGLSample
                 if (ScaleVelue_FtoW < 0.1) ScaleVelue_FtoW = 0.1f;
             }
             Pan_Move(FE, FS);
+        }
+
+        private void glControl1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if(isMouseDown)
+            {
+                Vector2 FE = new Vector2(e.X, -e.Y);
+                Pan_Move(FS, FE);
+                FS = new Vector2(e.X, -e.Y);
+            }
         }
     }
 }
