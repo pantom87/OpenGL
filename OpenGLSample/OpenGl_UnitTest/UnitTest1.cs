@@ -64,7 +64,6 @@ namespace OpenGl_UnitTest
             wForm.Triangle_List.Add(new Point(150, 30));
             wForm.Triangle_List.Add(new Point(150, 80));
 
-            //Test_PixelZoom(wForm);
             Assert.AreEqual(Test_Select(wForm), true);
         }
 
@@ -72,10 +71,10 @@ namespace OpenGl_UnitTest
         {
             OpenGLSample.Form1 wForm = new OpenGLSample.Form1();
 
-            GameWindow gwindow = new GameWindow(wForm.glControl1.Width, wForm.glControl1.Height);
+            GameWindow gwindow = new GameWindow(wForm.glc_Main.Width, wForm.glc_Main.Height);
             GL.ClearColor(Color.Blue);
             wForm.UpdateProjection();
-            wForm.rePaint();
+            wForm.RePaint();
 
             return wForm;
         }
@@ -85,7 +84,7 @@ namespace OpenGl_UnitTest
             //int delta_pixel = 3;
             //Point p2_Y = new Point(Line1Point.X + delta_pixel, Line1Point.Y - delta_pixel);
             wForm.UpdateProjection();
-            wForm.rePaint();
+            wForm.RePaint();
             Point p2_Y = new Point(253, 1); //노란
             Point p1_B = new Point(249, 1); //
             Point p3_B = new Point(253, 20);
@@ -101,7 +100,7 @@ namespace OpenGl_UnitTest
             wForm.Pan_Move(TS, TE);
 
 //             wForm.UpdateProjection();
-             wForm.rePaint();
+             wForm.RePaint();
             //====================================================================================
            // if (false == wForm.CompareColor(Color.Yellow, wForm.getColor(p2_Y.X + Convert.ToInt32(TES.X), p2_Y.Y + Convert.ToInt32(TES.Y)))) return false;
             if (false == wForm.CompareColor(Color.Yellow, wForm.getColor(360 , p2_Y.Y + Convert.ToInt32(TES.Y)))) return false;
@@ -115,7 +114,7 @@ namespace OpenGl_UnitTest
         {
             //wForm.Triangle_List.Clear();
             wForm.UpdateProjection();
-            wForm.rePaint();
+            wForm.RePaint();
 
             Point p2_Y = new Point(253, 1); //노란
             Point p1_B = new Point(249, 1); //
@@ -131,14 +130,14 @@ namespace OpenGl_UnitTest
             Vector2 FP_MouseStart = new Vector2(350, 0);
             wForm.Pan_Move(FP_MouseStart, FE);
             wForm.UpdateProjection();
-            wForm.rePaint();
+            wForm.RePaint();
             wForm.Scale_FtoW = 2f;
             wForm.UpdateProjection();
-            wForm.rePaint();
+            wForm.RePaint();
             wForm.Pan_Move(FE, FP_MouseStart);
 
             wForm.UpdateProjection();
-            wForm.rePaint();
+            wForm.RePaint();
             //====================================================================================
 
             Point TP1_Y = new Point(160, 3);
@@ -154,13 +153,13 @@ namespace OpenGl_UnitTest
 
         public bool Test_PixelZoom(OpenGLSample.Form1 wForm)
         {
-            wForm.rePaint();
+            wForm.RePaint();
 
-            Vector2 FP_MouseStart = new Vector2(100, 450); //100,50
+            Vector2 FP_MouseStart = new Vector2(100, 50); //100,50
             wForm.Move_PixelZoom(FP_MouseStart);
-            wForm.rePaint();
+            wForm.RePaint();
 
-            Point RP1_B = new Point(202,302);
+            Point RP1_B = new Point(202, 302);
             Point RP2_B = new Point(198, 298);
             Point RP3_B = new Point(302, 202);
             Point RP4_B = new Point(298, 198);
@@ -182,17 +181,17 @@ namespace OpenGl_UnitTest
             //return wForm.Mode_Select(new Vector2(100, 450));
 
             //wForm.rePaint();
-            wForm.View_reset();
-            Assert.AreEqual(wForm.Mode_Select(new Vector2(101, 499)), 1);
-            wForm.View_reset();
-            Assert.AreEqual(wForm.Mode_Select(new Vector2(100, 450)), 2);
-            wForm.View_reset();
-            Assert.AreEqual(wForm.Mode_Select(new Vector2(99,499 )), 1);
-            wForm.View_reset();
-            Assert.AreEqual(wForm.Mode_Select(new Vector2(101,469 )), 2);
-            wForm.View_reset();
-            Assert.AreEqual(wForm.Mode_Select(new Vector2(351, 469)), 0);
-            wForm.View_reset();
+            wForm.View_Reset();
+            Assert.AreEqual(wForm.Mode_Select(new Vector2(101, 1)), 1);
+            wForm.View_Reset();
+            Assert.AreEqual(wForm.Mode_Select(new Vector2(100, 50)), 2);
+            wForm.View_Reset();
+            Assert.AreEqual(wForm.Mode_Select(new Vector2(99, 1)), 1);
+            wForm.View_Reset();
+            Assert.AreEqual(wForm.Mode_Select(new Vector2(101, 31)), 2);
+            wForm.View_Reset();
+            Assert.AreEqual(wForm.Mode_Select(new Vector2(351, 31)), 0);
+            wForm.View_Reset();
             return true;
         }
 

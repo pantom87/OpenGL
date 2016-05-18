@@ -28,34 +28,32 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.glControl1 = new OpenTK.GLControl();
+            this.glc_Main = new OpenTK.GLControl();
             this.SuspendLayout();
             // 
-            // glControl1
+            // glc_Main
             // 
-            this.glControl1.BackColor = System.Drawing.Color.Black;
-            this.glControl1.Location = new System.Drawing.Point(139, 80);
-            this.glControl1.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
-            this.glControl1.Name = "glControl1";
-            this.glControl1.Size = new System.Drawing.Size(571, 625);
-            this.glControl1.TabIndex = 0;
-            this.glControl1.VSync = false;
-            this.glControl1.Load += new System.EventHandler(this.glControl1_Load);
-            this.glControl1.Paint += new System.Windows.Forms.PaintEventHandler(this.glControl1_Paint);
-            this.glControl1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.glControl1_MouseClick);
-            this.glControl1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.glControl1_MouseDown);
-            this.glControl1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.glControl1_MouseMove);
-            this.glControl1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.glControl1_MouseUp);
-            this.glControl1.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.glControl1_MouseWheel);
-            this.glControl1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.glControl1_MouseDoubleClick);
+            this.glc_Main.BackColor = System.Drawing.Color.Black;
+            this.glc_Main.Location = new System.Drawing.Point(122, 64);
+            this.glc_Main.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.glc_Main.Name = "glc_Main";
+            this.glc_Main.Size = new System.Drawing.Size(500, 500);
+            this.glc_Main.TabIndex = 0;
+            this.glc_Main.VSync = false;
+            this.glc_Main.Load += new System.EventHandler(this.glc_Main_Load);
+            this.glc_Main.Paint += new System.Windows.Forms.PaintEventHandler(this.glc_Main_Paint);
+            this.glc_Main.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.glControl_Main_MouseDoubleClick);
+            this.glc_Main.MouseDown += new System.Windows.Forms.MouseEventHandler(this.glControl_Main_MouseDown);
+            this.glc_Main.MouseMove += new System.Windows.Forms.MouseEventHandler(this.glControl_Main_MouseMove);
+            this.glc_Main.MouseUp += new System.Windows.Forms.MouseEventHandler(this.glControl_Main_MouseUp);
+            this.glc_Main.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.glControl_Main_MouseWheel);
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1034, 788);
-            this.Controls.Add(this.glControl1);
-            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.ClientSize = new System.Drawing.Size(905, 630);
+            this.Controls.Add(this.glc_Main);
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
@@ -64,7 +62,7 @@
 
         #endregion
 
-        public OpenTK.GLControl glControl1;
+        public OpenTK.GLControl glc_Main;
     }
 }
 

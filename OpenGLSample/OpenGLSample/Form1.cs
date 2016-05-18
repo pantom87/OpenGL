@@ -20,8 +20,8 @@ namespace OpenGLSample
             InitializeComponent();
         }
 
-        Vector2 FP_MouseStart;
-        Vector2 WP_CameraPosition = new Vector2(0, 0);
+        Vector2 VCP_MouseDownPosition;
+        Vector2 WCP_CameraPosition = new Vector2(0, 0);
         public float Scale_FtoW = 1;
 
 
@@ -34,33 +34,24 @@ namespace OpenGLSample
         private Bitmap img;
         private int Objectidx = 10;
 
-        private void glControl1_Paint(object sender, PaintEventArgs e)
+        public delegate void DPaint();
+        
+        private void glc_Main_Paint(object sender, PaintEventArgs e)
         {
             if(0 == Triangle_List.Count)
             {
+                Triangle_List.Add(new Point(0, 0));
+                Triangle_List.Add(new Point(100, 0));
+                Triangle_List.Add(new Point(100, 50));
 
-            Triangle_List.Add(new Point(0, 0));
-            Triangle_List.Add(new Point(100, 0));
-            Triangle_List.Add(new Point(100, 50));
-
-            Triangle_List.Add(new Point(20, 30));
-            Triangle_List.Add(new Point(120, 30));
-            Triangle_List.Add(new Point(120, 80));
-
+                Triangle_List.Add(new Point(20, 30));
+                Triangle_List.Add(new Point(120, 30));
+                Triangle_List.Add(new Point(120, 80));
             }
-//             if(0 == Triangle_List.Count)
-//             {
-//                    Triangle_List.Add(new Point(250, 0));
-//                    Triangle_List.Add(new Point(350, 0));
-//                    Triangle_List.Add(new Point(350, 50));
-// //                 Triangle_List.Add(new Point(0, 0));
-// //                 Triangle_List.Add(new Point(100, 0));
-// //                 Triangle_List.Add(new Point(100, 50));
-//             }
-            rePaint();
+            RePaint();
         }
 
-        public void rePaint()
+        public void RePaint()
         {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
@@ -91,13 +82,17 @@ namespace OpenGLSample
             UpdateImage();
             OpenTK.Graphics.GraphicsContext.CurrentContext.SwapBuffers();
         }
+        private void ReDraw()
+        {
+            glc_Main.Invalidate();
+        }
 
         private void UpdateImage()
         {
-            img = new Bitmap(glControl1.Width, glControl1.Height);
-            System.Drawing.Imaging.BitmapData data = img.LockBits(glControl1.ClientRectangle, System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            img = new Bitmap(glc_Main.Width, glc_Main.Height);
+            System.Drawing.Imaging.BitmapData data = img.LockBits(glc_Main.ClientRectangle, System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
 
-            GL.ReadPixels(0, 0, glControl1.Width, glControl1.Height, PixelFormat.Bgr, PixelType.UnsignedByte, data.Scan0);
+            GL.ReadPixels(0, 0, glc_Main.Width, glc_Main.Height, PixelFormat.Bgr, PixelType.UnsignedByte, data.Scan0);
             img.UnlockBits(data);
             //img.RotateFlip(RotateFlipType.RotateNoneFlipY);
 
@@ -113,27 +108,29 @@ namespace OpenGLSample
             return getColor(XY);
         }
 
-        private void glControl1_Load(object sender, EventArgs e)
+        private void glc_Main_Load(object sender, EventArgs e)
         {
             GL.ClearColor(Color.Blue);
             UpdateProjection();
         }
-        //변경 public
-        public Vector2 TransForm_FtoW( Vector2 F )
+        public Vector2 TransForm_VCPtoWCP(Vector2 VCP)
         {
-            return F / Scale_FtoW;
+            return VCP / Scale_FtoW;
+        }
+        private Vector2 TransForm_WCPtoVCP(Vector2 WCP)
+        {
+            return WCP * Scale_FtoW;
+        }
+        private Vector2 Transform_SCPtoVCP(Vector2 SCP)
+        {
+            return new Vector2(SCP.X, glc_Main.Height - SCP.Y);
         }
 
-        private Vector2 TransForm_WtoF(Vector2 W)
-        {
-            return W * Scale_FtoW;
-        }
-        //변경 public
         public void Pan_Move(Vector2 VS ,Vector2 VE)
         {
             Vector2 T_FES = VE - VS;
-            Vector2 w = TransForm_FtoW(T_FES);
-            WP_CameraPosition -= w;
+            Vector2 w = TransForm_VCPtoWCP(T_FES);
+            WCP_CameraPosition -= w;
             UpdateProjection();
         }
         public void UpdateProjection()
@@ -143,11 +140,11 @@ namespace OpenGLSample
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
             
-            GL.Ortho(0, glControl1.Width / Scale_FtoW, 0, glControl1.Height / Scale_FtoW, -100, 100); // Bottom-left corner pixel has coordinate (0, 0)      안원근법
+            GL.Ortho(0, glc_Main.Width / Scale_FtoW, 0, glc_Main.Height / Scale_FtoW, -100, 100); // Bottom-left corner pixel has coordinate (0, 0)      안원근법
             {
-                Vector3 V3Eye = new Vector3(WP_CameraPosition);
+                Vector3 V3Eye = new Vector3(WCP_CameraPosition);
                 V3Eye.Z = 100;
-                Vector3 V3Target = new Vector3(WP_CameraPosition);
+                Vector3 V3Target = new Vector3(WCP_CameraPosition);
                 V3Target.Z = -1;
                 Vector3 V3Up = Vector3.UnitY;
 
@@ -155,66 +152,63 @@ namespace OpenGLSample
 
                 GL.MultMatrix(ref m4);
             }
-            GL.Viewport(0, 0, glControl1.Width, glControl1.Height);
-            Redraw();
+            GL.Viewport(0, 0, glc_Main.Width, glc_Main.Height);
+            ReDraw();
         }
 
-        public void View_reset()
+        public void View_Reset()
         {
             Scale_FtoW = 1;
-            WP_CameraPosition = new Vector2(0, 0);
+            WCP_CameraPosition = new Vector2(0, 0);
         }
-        public int Mode_Select(Vector2 MousePoint)
+        
+
+        public int Mode_Select(Vector2 VCP_MouseClickedPosition)
         {
             int[] SelectBuffer = new int[64];
             GL.SelectBuffer(64, SelectBuffer);
             GL.RenderMode(RenderingMode.Select);
 
             // 확대 (scale 계산)
-            Move_PixelZoom(MousePoint);
-            rePaint();
+            Move_PixelZoom(VCP_MouseClickedPosition);
+            RePaint();
             int hits = GL.RenderMode(RenderingMode.Render);
             Console.WriteLine("Hit: " + hits);
             // 원복 (추후 구현)
-
 
             return hits;
         }
 
 
-        private void Redraw()
+        private bool isMouseRightDown = false;
+        private void glControl_Main_MouseDown(object sender, MouseEventArgs e)
         {
-            glControl1.Invalidate();
+            if(e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                isMouseRightDown = true;
+                VCP_MouseDownPosition = Transform_SCPtoVCP(new Vector2(e.X, e.Y));
+            }
         }
 
-        private bool isMouseDown = false;
-        private void glControl1_MouseDown(object sender, MouseEventArgs e)
+        private void glControl_Main_MouseUp(object sender, MouseEventArgs e)
         {
-            return;
-            Console.WriteLine("1");
-            isMouseDown = true;
-            FP_MouseStart = new Vector2(e.X , glControl1.Height - e.Y);
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                isMouseRightDown = false;
+                Vector2 VCP_MouseUpPosition = Transform_SCPtoVCP(new Vector2(e.X, e.Y));
+                Pan_Move(VCP_MouseDownPosition, VCP_MouseUpPosition);
+            }
         }
 
-        private void glControl1_MouseUp(object sender, MouseEventArgs e)
+        private void glControl_Main_MouseWheel(object sender, MouseEventArgs e)
         {
-            return;
-            Console.WriteLine("2");
-            isMouseDown = false;
-            Vector2 FE = new Vector2(e.X,glControl1.Height - e.Y);
-            Pan_Move(FP_MouseStart,FE);
-        }
-  
+            Vector2 VCP_MouseClickedPosition = new Vector2(0, 0);
+            VCP_MouseDownPosition = new Vector2(e.X, glc_Main.Height - e.Y);
 
-        private void glControl1_MouseWheel(object sender, MouseEventArgs e)
-        {
-            Vector2 FE = new Vector2(0, 0);
-            FP_MouseStart = new Vector2(e.X, glControl1.Height - e.Y);
-
-            Pan_Move(FP_MouseStart, FE);
+            Pan_Move(VCP_MouseDownPosition, VCP_MouseClickedPosition);
             if (e.Delta > 0)
             {
-                if (Scale_FtoW > 5) Scale_FtoW = 5;
+                if (Scale_FtoW > 7) Scale_FtoW = 7;
                 Scale_FtoW +=0.1f;
             }
             else
@@ -222,35 +216,20 @@ namespace OpenGLSample
                 Scale_FtoW -=0.1f;
                 if (Scale_FtoW < 0.1) Scale_FtoW = 0.1f;
             }
-            Pan_Move(FE, FP_MouseStart);
+            Pan_Move(VCP_MouseClickedPosition, VCP_MouseDownPosition);
         }
 
-        public bool Move_PixelZoom(Vector2 MousePoint)
+        private void glControl_Main_MouseMove(object sender, MouseEventArgs e)
         {
-            Vector2 FE = new Vector2(0, 0);
-            Vector2 FMousePosition = new Vector2(MousePoint.X, glControl1.Height - MousePoint.Y);
-
-            Pan_Move(FMousePosition, FE);
-            
-            Scale_FtoW = (glControl1.Width / 10f);
-
-            FMousePosition = new Vector2(glControl1.Width / 2, glControl1.Height / 2);
-            Pan_Move(FE, FMousePosition);
-
-            return true;
-        }
-
-        private void glControl1_MouseMove(object sender, MouseEventArgs e)
-        {
-            if(isMouseDown)
+            if (isMouseRightDown)
             {
-                Vector2 FE = new Vector2(e.X, glControl1.Height - e.Y);
-                Pan_Move(FP_MouseStart, FE);
-                FP_MouseStart = new Vector2(e.X, glControl1.Height - e.Y);
+                Vector2 VCP_MouseCurrentPosition = Transform_SCPtoVCP(new Vector2(e.X, e.Y));
+                Pan_Move(VCP_MouseDownPosition, VCP_MouseCurrentPosition);
+                VCP_MouseDownPosition = VCP_MouseCurrentPosition;
             }
         }
 
-        private void glControl1_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void glControl_Main_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             Triangle_List.Clear();
 
@@ -263,24 +242,32 @@ namespace OpenGLSample
             Triangle_List.Add(new Point(120, 80));
 
             UpdateProjection();
-            rePaint();
+            RePaint();
 
-            Mode_Select(new Vector2(e.X, e.Y));
+            Mode_Select(Transform_SCPtoVCP(new Vector2(e.X, e.Y)));
         }
 
-        public bool CompareColor(Color MColor, Color CColor)
+        public bool Move_PixelZoom(Vector2 VCP_MouseClickedPoint)
         {
-            if ((MColor.R == CColor.R) && (MColor.G == CColor.G) && (MColor.B == CColor.B))
+            Vector2 VCP_OriginOfCoordination = new Vector2(0, 0);
+
+            Pan_Move(VCP_MouseClickedPoint, VCP_OriginOfCoordination);
+            
+            Scale_FtoW = (glc_Main.Width / 10f);
+
+            Vector2 VCP_TargetPosition = new Vector2(glc_Main.Width / 2, glc_Main.Height / 2);
+            Pan_Move(VCP_OriginOfCoordination, VCP_TargetPosition);
+
+            return true;
+        }
+
+        public bool CompareColor(Color StdColor, Color ComColor)
+        {
+            if ((StdColor.R == ComColor.R) && (StdColor.G == ComColor.G) && (StdColor.B == ComColor.B))
             {
                 return true;
             }
             return false;
-        }
-        Point clickp = new Point(0, 0);
-        private void glControl1_MouseClick(object sender, MouseEventArgs e)
-        {
-            clickp.X = e.X;
-            clickp.Y = e.Y;
         }
     }
 }
