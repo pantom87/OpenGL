@@ -71,7 +71,7 @@ namespace OpenGl_UnitTest
         {
             OpenGLSample.Form1 wForm = new OpenGLSample.Form1();
 
-            GameWindow gwindow = new GameWindow(wForm.glc_Main.Width, wForm.glc_Main.Height);
+            GameWindow gwindow = new GameWindow(wForm.glControl_Main.Width, wForm.glControl_Main.Height);
             GL.ClearColor(Color.Blue);
             wForm.UpdateProjection();
             wForm.RePaint();
@@ -85,27 +85,27 @@ namespace OpenGl_UnitTest
             //Point p2_Y = new Point(Line1Point.X + delta_pixel, Line1Point.Y - delta_pixel);
             wForm.UpdateProjection();
             wForm.RePaint();
-            Point p2_Y = new Point(253, 1); //노란
-            Point p1_B = new Point(249, 1); //
-            Point p3_B = new Point(253, 20);
+            Point VCP_p2_Y = new Point(253, 1); //노란
+            Point VCP_p1_B = new Point(249, 1); //
+            Point VCP_p3_B = new Point(253, 20);
 
-            if (false == wForm.CompareColor(Color.Yellow, wForm.getColor(p2_Y))) return false;
-            if (false == wForm.CompareColor(Color.Blue, wForm.getColor(p1_B))) return false;
-            if (false == wForm.CompareColor(Color.Blue, wForm.getColor(p3_B))) return false;
+            if (false == wForm.CompareColor(Color.Yellow, wForm.getColor(VCP_p2_Y))) return false;
+            if (false == wForm.CompareColor(Color.Blue, wForm.getColor(VCP_p1_B))) return false;
+            if (false == wForm.CompareColor(Color.Blue, wForm.getColor(VCP_p3_B))) return false;
             //====================================================================================
-            Vector2 TS = new Vector2(250, 0);
-            Vector2 TE = new Vector2(350, 100);
-            Vector2 TES = TE - TS;
+            Vector2 VCP_TS = new Vector2(250, 0);
+            Vector2 VCP_TE = new Vector2(350, 100);
+            Vector2 VCP_TES = VCP_TE - VCP_TS;
 
-            wForm.Pan_Move(TS, TE);
+            wForm.Pan_Move(VCP_TS, VCP_TE);
 
 //             wForm.UpdateProjection();
              wForm.RePaint();
             //====================================================================================
            // if (false == wForm.CompareColor(Color.Yellow, wForm.getColor(p2_Y.X + Convert.ToInt32(TES.X), p2_Y.Y + Convert.ToInt32(TES.Y)))) return false;
-            if (false == wForm.CompareColor(Color.Yellow, wForm.getColor(360 , p2_Y.Y + Convert.ToInt32(TES.Y)))) return false;
-            if (false == wForm.CompareColor(Color.Blue, wForm.getColor(p1_B.X + Convert.ToInt32(TES.X), p1_B.Y + Convert.ToInt32(TES.Y)))) return false;
-            if (false == wForm.CompareColor(Color.Blue, wForm.getColor(p3_B.X + Convert.ToInt32(TES.X), p3_B.Y + Convert.ToInt32(TES.Y)))) return false;
+            if (false == wForm.CompareColor(Color.Yellow, wForm.getColor(360 , VCP_p2_Y.Y + Convert.ToInt32(VCP_TES.Y)))) return false;
+            if (false == wForm.CompareColor(Color.Blue, wForm.getColor(VCP_p1_B.X + Convert.ToInt32(VCP_TES.X), VCP_p1_B.Y + Convert.ToInt32(VCP_TES.Y)))) return false;
+            if (false == wForm.CompareColor(Color.Blue, wForm.getColor(VCP_p3_B.X + Convert.ToInt32(VCP_TES.X), VCP_p3_B.Y + Convert.ToInt32(VCP_TES.Y)))) return false;
 
             return true;
         }
@@ -116,37 +116,37 @@ namespace OpenGl_UnitTest
             wForm.UpdateProjection();
             wForm.RePaint();
 
-            Point p2_Y = new Point(253, 1); //노란
-            Point p1_B = new Point(249, 1); //
-            Point p3_B = new Point(253, 20);
+            Point VCP_p2_Y = new Point(253, 1); //노란
+            Point VCP_p1_B = new Point(249, 1); //
+            Point VCP_p3_B = new Point(253, 20);
 
-            if (false == wForm.CompareColor(Color.Yellow, wForm.getColor(p2_Y))) return false;
-            if (false == wForm.CompareColor(Color.Blue, wForm.getColor(p1_B))) return false;
-            if (false == wForm.CompareColor(Color.Blue, wForm.getColor(p3_B))) return false;
+            if (false == wForm.CompareColor(Color.Yellow, wForm.getColor(VCP_p2_Y))) return false;
+            if (false == wForm.CompareColor(Color.Blue, wForm.getColor(VCP_p1_B))) return false;
+            if (false == wForm.CompareColor(Color.Blue, wForm.getColor(VCP_p3_B))) return false;
 
             //====================================================================================
             //기준점
-            Vector2 FE = new Vector2(0, 0);
-            Vector2 FP_MouseStart = new Vector2(350, 0);
-            wForm.Pan_Move(FP_MouseStart, FE);
+            Vector2 VCP_OriginOfCoordination = new Vector2(0, 0);
+            Vector2 VCP_MouseDown = new Vector2(350, 0);
+            wForm.Pan_Move(VCP_MouseDown, VCP_OriginOfCoordination);
             wForm.UpdateProjection();
             wForm.RePaint();
-            wForm.Scale_FtoW = 2f;
+            wForm.Scale_VCPtoWCP = 2f;
             wForm.UpdateProjection();
             wForm.RePaint();
-            wForm.Pan_Move(FE, FP_MouseStart);
+            wForm.Pan_Move(VCP_OriginOfCoordination, VCP_MouseDown);
 
             wForm.UpdateProjection();
             wForm.RePaint();
             //====================================================================================
 
-            Point TP1_Y = new Point(160, 3);
-            Point TP2_B = new Point(160, 7);
-            Point TP3_B = new Point(400, 3);
+            Point VCP_TP1_Y = new Point(160, 3);
+            Point VCP_TP2_B = new Point(160, 7);
+            Point VCP_TP3_B = new Point(400, 3);
 
-            if (false == wForm.CompareColor(Color.Yellow, wForm.getColor(TP1_Y))) return false;
-            if (false == wForm.CompareColor(Color.Blue, wForm.getColor(TP2_B))) return false;
-            if (false == wForm.CompareColor(Color.Blue, wForm.getColor(TP3_B))) return false;
+            if (false == wForm.CompareColor(Color.Yellow, wForm.getColor(VCP_TP1_Y))) return false;
+            if (false == wForm.CompareColor(Color.Blue, wForm.getColor(VCP_TP2_B))) return false;
+            if (false == wForm.CompareColor(Color.Blue, wForm.getColor(VCP_TP3_B))) return false;
 
             return true;
         }
@@ -155,22 +155,22 @@ namespace OpenGl_UnitTest
         {
             wForm.RePaint();
 
-            Vector2 FP_MouseStart = new Vector2(100, 50); //100,50
-            wForm.Move_PixelZoom(FP_MouseStart);
+            Vector2 VCP_MouseDown = new Vector2(100, 50); //100,50
+            wForm.Move_PixelZoom(VCP_MouseDown);
             wForm.RePaint();
 
-            Point RP1_B = new Point(202, 302);
-            Point RP2_B = new Point(198, 298);
-            Point RP3_B = new Point(302, 202);
-            Point RP4_B = new Point(298, 198);
+            Point VCP_RP1_B = new Point(202, 302);
+            Point VCP_RP2_B = new Point(198, 298);
+            Point VCP_RP3_B = new Point(302, 202);
+            Point VCP_RP4_B = new Point(298, 198);
 
-            Point RP5_R = new Point(250, 250);
+            Point VCP_RP5_R = new Point(250, 250);
 
-            if (false == wForm.CompareColor(Color.Blue, wForm.getColor(RP1_B))) return false;
-            if (false == wForm.CompareColor(Color.Blue, wForm.getColor(RP2_B))) return false;
-            if (false == wForm.CompareColor(Color.Blue, wForm.getColor(RP3_B))) return false;
-            if (false == wForm.CompareColor(Color.Blue, wForm.getColor(RP4_B))) return false;
-            if (false == wForm.CompareColor(Color.Red, wForm.getColor(RP5_R))) return false;
+            if (false == wForm.CompareColor(Color.Blue, wForm.getColor(VCP_RP1_B))) return false;
+            if (false == wForm.CompareColor(Color.Blue, wForm.getColor(VCP_RP2_B))) return false;
+            if (false == wForm.CompareColor(Color.Blue, wForm.getColor(VCP_RP3_B))) return false;
+            if (false == wForm.CompareColor(Color.Blue, wForm.getColor(VCP_RP4_B))) return false;
+            if (false == wForm.CompareColor(Color.Red, wForm.getColor(VCP_RP5_R))) return false;
 
             return true;
         }
